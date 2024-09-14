@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WindowTest.cpp">
+    <ClCompile Include="window.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
