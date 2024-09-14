@@ -6,6 +6,7 @@
 // Constants for window dimensions
 const int DEFAULT_WINDOW_WIDTH = 960;
 const int DEFAULT_WINDOW_HEIGHT = 540;
+
 const LPCWSTR WINDOW_CLASS_NAME = L"BasicWindow";
 const LPCWSTR WINDOW_TITLE = L"MAGE2D";
 
@@ -13,17 +14,22 @@ const LPCWSTR WINDOW_TITLE = L"MAGE2D";
 int windowWidth = DEFAULT_WINDOW_WIDTH;
 int windowHeight = DEFAULT_WINDOW_HEIGHT;
 bool isWindowFullScreen = false;            // Determines if the window is in full screen mode
+
 const unsigned MAX_INPUT_LENGTH = 64;
 wchar_t msg[MAX_INPUT_LENGTH] = { 0 };
-bool virtualKeysStates[256] = { 0 };        // States of the keyboard keys
+bool virtualKeysCodes[256] = { 0 };        // States of the keyboard keys
+
+int mouseX = 0, mouseY = 0;
+int mouseWheel = 0;
+bool mousLeftButton = false;
+bool mouseRightButton = false;
+bool mouseMiddleButton = false;
 
 // Function prototypes
 LRESULT CALLBACK WinProc(HWND, UINT, WPARAM, LPARAM);
 HWND CreateAppWindow(HINSTANCE hInstance, int nCmdShow);
 bool InitWindowClass(HINSTANCE hInstance);
 void AdjustAndCenterWindow(HWND hwnd);
-
-//--------------------------------------------------------------------------------
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -53,8 +59,6 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// End of program
 	return int(msg.wParam);
 }
-
-//--------------------------------------------------------------------------------
 
 // Initialize the window class
 bool InitWindowClass(HINSTANCE hInstance)
@@ -140,14 +144,12 @@ void AdjustAndCenterWindow(HWND hwnd)
 	);
 }
 
-//--------------------------------------------------------------------------------
-
 // Window procedure
 LRESULT CALLBACK WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	HDC hdc;		// represents the graphics device
-	PAINTSTRUCT ps; // holds the invalidated region of the window
-	RECT rect;		// rectangular region
+	HDC hdc;			// represents the graphics device
+	PAINTSTRUCT ps{};	// holds the invalidated region of the window
+	RECT rect{};		// rectangular region
 
 	switch (message)
 	{
@@ -164,40 +166,64 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		// process key presses
 	case WM_KEYDOWN:
-		virtualKeysStates[wParam] = true;
+		virtualKeysCodes[wParam] = true;
 		InvalidateRect(hwnd, NULL, TRUE);
 		return 0;
 
 		// process key releases
 	case WM_KEYUP:
-		virtualKeysStates[wParam] = false;
+		virtualKeysCodes[wParam] = false;
 		InvalidateRect(hwnd, NULL, TRUE);
 		return 0;
 
+	case WM_MOUSEMOVE:
+		mouseX = LOWORD(lParam);
+		mouseY = HIWORD(lParam);
+		return 0;
+
+	case WM_MOUSEWHEEL:
+		mouseWheel = GET_WHEEL_DELTA_WPARAM(wParam);
+		InvalidateRect(hwnd, NULL, TRUE);
+		return 0;
+
+	case WM_LBUTTONDOWN:
+		mousLeftButton = true;
+		InvalidateRect(hwnd, NULL, TRUE);
+		return 0;
+
+	case WM_LBUTTONUP:
+		mousLeftButton = false;
+		return 0;
+
+	case WM_MBUTTONDOWN:
+		mouseMiddleButton = true;
+		InvalidateRect(hwnd, NULL, TRUE);
+		return 0;
+
+	case WM_MBUTTONUP:
+		mouseMiddleButton = false;
+		return 0;
+	case WM_RBUTTONDOWN:
+		mouseRightButton = true;
+		InvalidateRect(hwnd, NULL, TRUE);
+		return 0;
+
+	case WM_RBUTTONUP:
+		mouseRightButton = false;
+		return 0;
+
 	case WM_PAINT:
-		hdc = BeginPaint(hwnd, &ps);
-		GetClientRect(hwnd, &rect);
-
-		if (virtualKeysStates[VK_CONTROL])
-			DrawText(hdc, L"CTRL", -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-		if (virtualKeysStates[VK_LEFT])
-			DrawText(hdc, L"LEFT", -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-		if (virtualKeysStates[VK_RIGHT])
-			DrawText(hdc, L"RIGHT", -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-		if (virtualKeysStates[VK_UP])
-			DrawText(hdc, L"UP", -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-		if (virtualKeysStates[VK_DOWN])
-			DrawText(hdc, L"DOWN", -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-		if (virtualKeysStates[VK_ESCAPE])
-			DrawText(hdc, L"ESC", -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-		if (virtualKeysStates[VK_RETURN])
-			DrawText(hdc, L"ENTER", -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-		if (virtualKeysStates[VK_SPACE])
-			DrawText(hdc, L"SPACE", -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-
-		rect.bottom -= 100;
-		DrawText(hdc, msg, -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-		EndPaint(hwnd, &ps);
+		hdc = GetDC(hwnd);
+		SetPixel(hdc, mouseX, mouseY, RGB(0, 0, 0));
+		SetPixel(hdc, mouseX + 1, mouseY + 1, RGB(0, 0, 0));
+		SetPixel(hdc, mouseX - 1, mouseY - 1, RGB(0, 0, 0));
+		SetPixel(hdc, mouseX - 1, mouseY + 1, RGB(0, 0, 0));
+		SetPixel(hdc, mouseX + 1, mouseY - 1, RGB(0, 0, 0));
+		SetPixel(hdc, mouseX, mouseY + 1, RGB(0, 0, 0));
+		SetPixel(hdc, mouseX, mouseY - 1, RGB(0, 0, 0));
+		SetPixel(hdc, mouseX + 1, mouseY, RGB(0, 0, 0));
+		SetPixel(hdc, mouseX - 1, mouseY, RGB(0, 0, 0));
+		ReleaseDC(hwnd, hdc);
 		return 0;
 
 	case WM_DESTROY:
@@ -206,5 +232,3 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
-
-//--------------------------------------------------------------------------------
