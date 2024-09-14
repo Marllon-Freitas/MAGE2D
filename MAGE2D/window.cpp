@@ -3,6 +3,12 @@
 #include <windowsx.h>
 #include "resources.h"
 
+// Function prototypes
+LRESULT CALLBACK WinProc(HWND, UINT, WPARAM, LPARAM);
+HWND CreateAppWindow(HINSTANCE hInstance, int nCmdShow);
+bool InitWindowClass(HINSTANCE hInstance);
+void AdjustAndCenterWindow(HWND hwnd);
+
 // Constants for window dimensions
 const int DEFAULT_WINDOW_WIDTH = 960;
 const int DEFAULT_WINDOW_HEIGHT = 540;
@@ -15,21 +21,34 @@ int windowWidth = DEFAULT_WINDOW_WIDTH;
 int windowHeight = DEFAULT_WINDOW_HEIGHT;
 bool isWindowFullScreen = false;            // Determines if the window is in full screen mode
 
-const unsigned MAX_INPUT_LENGTH = 64;
-wchar_t msg[MAX_INPUT_LENGTH] = { 0 };
-bool virtualKeysCodes[256] = { 0 };        // States of the keyboard keys
+bool virtualKeysCodes[256] = { 0 };         // States of the keyboard keys
+HWND hwnd;                                  // Global window handle
 
-int mouseX = 0, mouseY = 0;
-int mouseWheel = 0;
-bool mousLeftButton = false;
-bool mouseRightButton = false;
-bool mouseMiddleButton = false;
+// Game functions
+// Initializes the game by allocating resources
+void GameInit()
+{
 
-// Function prototypes
-LRESULT CALLBACK WinProc(HWND, UINT, WPARAM, LPARAM);
-HWND CreateAppWindow(HINSTANCE hInstance, int nCmdShow);
-bool InitWindowClass(HINSTANCE hInstance);
-void AdjustAndCenterWindow(HWND hwnd);
+}
+
+// Updates the game logic
+void GameUpdate()
+{
+	// Exit the game when the ESC key is pressed
+	if (virtualKeysCodes[VK_ESCAPE]) PostMessage(hwnd, WM_DESTROY, 0, 0);
+}
+
+// Draws the next frame of the game
+void GameDraw()
+{
+
+}
+
+// Finalizes the game by deallocating resources
+void GameFinalize()
+{
+
+}
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -41,20 +60,33 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	}
 
 	// Create the application window
-	HWND hwnd = CreateAppWindow(hInstance, nCmdShow);
+	hwnd = CreateAppWindow(hInstance, nCmdShow);
 	if (!hwnd)
 	{
 		MessageBox(NULL, L"Error creating window!", WINDOW_TITLE, MB_ICONERROR);
 		return 0;
 	}
 
+	// Initialize the game
+	GameInit();
+
 	// Message handling for the application window
 	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0))
+	do
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		else
+		{
+			GameUpdate();
+			GameDraw();
+		}
+	} while (msg.message != WM_QUIT);
+
+	GameFinalize();
 
 	// End of program
 	return int(msg.wParam);
@@ -147,83 +179,22 @@ void AdjustAndCenterWindow(HWND hwnd)
 // Window procedure
 LRESULT CALLBACK WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	HDC hdc;			// represents the graphics device
-	PAINTSTRUCT ps{};	// holds the invalidated region of the window
-	RECT rect{};		// rectangular region
+	HDC hdc = nullptr;			// Represents the graphics device
+	PAINTSTRUCT ps{};			// Holds the invalidated region of the window
+	RECT rect{};				// Rectangular region
 
 	switch (message)
 	{
-		// window loses focus
-	case WM_KILLFOCUS:
-		wcscpy_s(msg, MAX_INPUT_LENGTH, L"Bye bye!");
-		InvalidateRect(hwnd, NULL, TRUE);
-		return 0;
-
-	case WM_SETFOCUS:
-		wcscpy_s(msg, MAX_INPUT_LENGTH, L"Welcome back!");
-		InvalidateRect(hwnd, NULL, TRUE);
-		return 0;
-
-		// process key presses
+		// Process key presses
 	case WM_KEYDOWN:
 		virtualKeysCodes[wParam] = true;
 		InvalidateRect(hwnd, NULL, TRUE);
 		return 0;
 
-		// process key releases
+		// Process key releases
 	case WM_KEYUP:
 		virtualKeysCodes[wParam] = false;
 		InvalidateRect(hwnd, NULL, TRUE);
-		return 0;
-
-	case WM_MOUSEMOVE:
-		mouseX = LOWORD(lParam);
-		mouseY = HIWORD(lParam);
-		return 0;
-
-	case WM_MOUSEWHEEL:
-		mouseWheel = GET_WHEEL_DELTA_WPARAM(wParam);
-		InvalidateRect(hwnd, NULL, TRUE);
-		return 0;
-
-	case WM_LBUTTONDOWN:
-		mousLeftButton = true;
-		InvalidateRect(hwnd, NULL, TRUE);
-		return 0;
-
-	case WM_LBUTTONUP:
-		mousLeftButton = false;
-		return 0;
-
-	case WM_MBUTTONDOWN:
-		mouseMiddleButton = true;
-		InvalidateRect(hwnd, NULL, TRUE);
-		return 0;
-
-	case WM_MBUTTONUP:
-		mouseMiddleButton = false;
-		return 0;
-	case WM_RBUTTONDOWN:
-		mouseRightButton = true;
-		InvalidateRect(hwnd, NULL, TRUE);
-		return 0;
-
-	case WM_RBUTTONUP:
-		mouseRightButton = false;
-		return 0;
-
-	case WM_PAINT:
-		hdc = GetDC(hwnd);
-		SetPixel(hdc, mouseX, mouseY, RGB(0, 0, 0));
-		SetPixel(hdc, mouseX + 1, mouseY + 1, RGB(0, 0, 0));
-		SetPixel(hdc, mouseX - 1, mouseY - 1, RGB(0, 0, 0));
-		SetPixel(hdc, mouseX - 1, mouseY + 1, RGB(0, 0, 0));
-		SetPixel(hdc, mouseX + 1, mouseY - 1, RGB(0, 0, 0));
-		SetPixel(hdc, mouseX, mouseY + 1, RGB(0, 0, 0));
-		SetPixel(hdc, mouseX, mouseY - 1, RGB(0, 0, 0));
-		SetPixel(hdc, mouseX + 1, mouseY, RGB(0, 0, 0));
-		SetPixel(hdc, mouseX - 1, mouseY, RGB(0, 0, 0));
-		ReleaseDC(hwnd, hdc);
 		return 0;
 
 	case WM_DESTROY:
