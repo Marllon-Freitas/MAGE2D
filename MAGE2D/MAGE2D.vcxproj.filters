@@ -24,9 +24,18 @@
     <ClCompile Include="src\engine\Window.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\Engine.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\Game.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\WinGame.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\engine\resources.h">
+    <ClInclude Include="src\engine\Resources.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\Window.h">
@@ -35,9 +44,15 @@
     <ClInclude Include="src\engine\Types.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\Engine.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\Game.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="src\engine\resource files\resource.rc">
+    <ResourceCompile Include="src\engine\resource files\Resource.rc">
       <Filter>Engine\Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

@@ -127,15 +127,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\Engine.cpp" />
+    <ClCompile Include="src\engine\Game.cpp" />
     <ClCompile Include="src\engine\Window.cpp" />
+    <ClCompile Include="src\game\WinGame.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\engine\resources.h" />
+    <ClInclude Include="src\engine\Engine.h" />
+    <ClInclude Include="src\engine\Game.h" />
+    <ClInclude Include="src\engine\Resources.h" />
     <ClInclude Include="src\engine\Types.h" />
     <ClInclude Include="src\engine\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="src\engine\resource files\resource.rc" />
+    <ResourceCompile Include="src\engine\resource files\Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
