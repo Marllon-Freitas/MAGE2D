@@ -1,11 +1,9 @@
-#include "../engine/Resources.h"
-#include "../engine/Engine.h"
-#include "../engine/Game.h"
 #include <random>      // includes random number functions
 #include <sstream>
 
-using namespace std;
-using std::stringstream;
+#include "../engine/Resources.h"
+#include "../engine/Engine.h"
+#include "../engine/Game.h"
 
 class WinGame : public Game
 {
@@ -23,11 +21,11 @@ public:
 
 void WinGame::Init()
 {
-	hdc = GetDC(window->Id());
-	random_device rd;
-	mt19937 gen(rd());
-	uniform_int_distribution<int> dis(1, 50);
-	uniform_int_distribution<int> vel(1, 20);
+	hdc = GetDC(window->GetWindowId());
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dis(1, 50);
+	std::uniform_int_distribution<int> vel(1, 20);
 
 	HPEN hPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
 	HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
@@ -45,24 +43,24 @@ void WinGame::Init()
 
 void WinGame::Update()
 {
-	if (window->KeyDown(VK_ESCAPE))
-		window->Close();
+	if (window->IsKeyDown(VK_ESCAPE))
+		window->CloseWindow();
 
 	xIni += velXIn;
 	yIni += velYIn;
 	xFim += velXFim;
 	yFim += velYFim;
 
-	if (xIni < 0 || xIni > window->Width())
+	if (xIni < 0 || xIni > window->GetWidth())
 		velXIn = -velXIn;
 
-	if (yIni < 0 || yIni > window->Height())
+	if (yIni < 0 || yIni > window->GetHeight())
 		velYIn = -velYIn;
 
-	if (xFim < 0 || xFim > window->Width())
+	if (xFim < 0 || xFim > window->GetWidth())
 		velXFim = -velXFim;
 
-	if (yFim < 0 || yFim > window->Height())
+	if (yFim < 0 || yFim > window->GetHeight())
 		velYFim = -velYFim;
 
 	MoveToEx(hdc, xIni, yIni, NULL);
@@ -75,7 +73,7 @@ void WinGame::Draw()
 
 void WinGame::Finalize()
 {
-	ReleaseDC(window->Id(), hdc);
+	ReleaseDC(window->GetWindowId(), hdc);
 }
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
@@ -83,12 +81,12 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 {
 	// create engine and configure the window
 	Engine* engine = new Engine();
-	engine->window->Mode(WINDOWED);
-	engine->window->Size(960, 540);
-	engine->window->Color(30, 30, 30);
-	engine->window->Title("Window Game");
-	engine->window->Icon(IDI_ICON);
-	engine->window->Cursor(NULL);
+	engine->window->SetMode(WINDOWED);
+	engine->window->SetSize(960, 540);
+	engine->window->SetBackgroundColor(30, 30, 30);
+	engine->window->SetTitle("Window Game");
+	engine->window->SetIcon(IDI_ICON);
+	engine->window->SetCursor(NULL);
 
 	// create and start the game
 	engine->Start(new WinGame());

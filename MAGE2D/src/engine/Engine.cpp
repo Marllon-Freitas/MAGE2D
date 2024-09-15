@@ -1,6 +1,7 @@
-#include "Engine.h"
 #include <windows.h>
 #include <sstream>
+
+#include "Engine.h"
 
 Game* Engine::game = nullptr;       // game in execution
 Window* Engine::window = nullptr;   // game window
@@ -34,10 +35,10 @@ int Engine::Loop()
 	RECT rect;          // client area of the screen
 
 	// capture device context
-	hdc = GetDC(window->Id());
+	hdc = GetDC(window->GetWindowId());
 
 	// get the size of the client area
-	GetClientRect(window->Id(), &rect);
+	GetClientRect(window->GetWindowId(), &rect);
 
 	// game initialization
 	game->Init();
@@ -57,7 +58,7 @@ int Engine::Loop()
 			game->Update();
 
 			// clear the client area
-			FillRect(hdc, &rect, CreateSolidBrush(window->Color()));
+			FillRect(hdc, &rect, CreateSolidBrush(window->GetBackgroundColor()));
 
 			// draw the game
 			game->Draw();
@@ -71,7 +72,7 @@ int Engine::Loop()
 	game->Finalize();
 
 	// release device context
-	ReleaseDC(window->Id(), hdc);
+	ReleaseDC(window->GetWindowId(), hdc);
 
 	// end application
 	return int(msg.wParam);

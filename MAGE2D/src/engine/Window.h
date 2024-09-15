@@ -2,9 +2,10 @@
 #define _MAGE2D_WINDOW_H_
 
 #include <windows.h>    
-#include <windowsx.h>   
-#include "Types.h"      
 #include <string>       
+#include <windowsx.h>
+
+#include "Types.h"    
 
 enum WindowModes { FULLSCREEN, WINDOWED };
 
@@ -37,32 +38,32 @@ private:
 public:
 	Window();															// Window constructor
 
-	HINSTANCE AppId() const;											// Returns the application instance handle
-	HWND Id() const;													// Returns the window handle
-	int Width() const;													// Returns the current window width
-	int Height() const;													// Returns the current window height
+	HINSTANCE GetAppId() const;											// Returns the application instance handle
+	HWND GetWindowId() const;											// Returns the window handle
+	int GetWidth() const;												// Returns the current window width
+	int GetHeight() const;												// Returns the current window height
 
-	void Icon(const uint icon);											// Sets the window icon
-	void Cursor(const uint cursor);										// Sets the window cursor
-	void Title(const std::string& title);								// Sets the window title
-	void Size(int width, int height);									// Sets the window size (width and height)
-	void Mode(int mode);												// Sets the window mode (full screen/windowed)
+	void SetIcon(const uint icon);										// Sets the window icon
+	void SetCursor(const uint cursor);									// Sets the window cursor
+	void SetTitle(const std::string& title);							// Sets the window title
+	void SetSize(int width, int height);								// Sets the window size (width and height)
+	void SetMode(int mode);												// Sets the window mode (full screen/windowed)
 
-	int Mode() const;													// Returns the current window mode (full screen/windowed)
-	float CenterX() const;												// Returns the window center on the x-axis
-	float CenterY() const;												// Returns the window center on the y-axis
-	std::string Title() const;											// Returns the window title
+	int GetMode() const;												// Returns the current window mode (full screen/windowed)
+	float GetCenterX() const;											// Returns the window center on the x-axis
+	float GetCenterY() const;											// Returns the window center on the y-axis
+	std::string GetTitle() const;										// Returns the window title
 
-	void HideCursor(bool hide);											// Enables or disables cursor display
-	void Close() const;														// Closes the window immediately
+	void ShowCursor(bool show);											// Enables or disables cursor display
+	void CloseWindow() const;											// Closes the window immediately
 
-	bool KeyDown(int vkcode) const;										// Checks if a key/button is pressed
-	bool KeyUp(int vkcode) const;										// Checks if a key/button is released
-	int MouseX() const;													// Returns the mouse position on the x-axis
-	int MouseY() const;													// Returns the mouse position on the y-axis
+	bool IsKeyDown(int vkcode) const;									// Checks if a key/button is pressed
+	bool IsKeyUp(int vkcode) const;										// Checks if a key/button is released
+	int GetMouseX() const;												// Returns the mouse position on the x-axis
+	int GetMouseY() const;												// Returns the mouse position on the y-axis
 
-	COLORREF Color() const;												// Returns the window background color
-	void Color(int r, int g, int b);									// Sets the window background color
+	COLORREF GetBackgroundColor() const;								// Returns the window background color
+	void SetBackgroundColor(int r, int g, int b);						// Sets the window background color
 	void Print(const std::string& text, int x, int y, COLORREF color) const;// Displays text using the Windows library (slow)
 	bool Create();														// Creates the window with the attribute values
 
@@ -71,97 +72,125 @@ public:
 };
 
 // Inline member functions
-inline HINSTANCE Window::AppId() const
+
+// Returns application id
+inline HINSTANCE Window::GetAppId() const
 {
 	return m_hInstance;
 }
 
-inline HWND Window::Id() const
+// Returns the game window id
+inline HWND Window::GetWindowId() const
 {
 	return m_windowHandle;
 }
 
-inline int Window::Width() const
+// Return the current window width
+inline int Window::GetWidth() const
 {
 	return m_windowWidth;
 }
 
-inline int Window::Height() const
+// Return the current window height
+inline int Window::GetHeight() const
 {
 	return m_windowHeight;
 }
 
-inline void Window::Icon(const uint icon)
+// ---------------------------------------------------------------------------------
+
+// sets the window icon
+inline void Window::SetIcon(const uint icon)
 {
 	m_windowIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(icon));
 }
 
-inline void Window::Cursor(const uint cursor)
+// sets the window cursor
+inline void Window::SetCursor(const uint cursor)
 {
 	m_windowCursor = LoadCursor(GetModuleHandle(NULL), MAKEINTRESOURCE(cursor));
 }
 
-inline void Window::Title(const std::string& title)
+// sets the window title
+inline void Window::SetTitle(const std::string& title)
 {
 	m_windowTitle = title;
 }
 
-inline int Window::Mode() const
+// ---------------------------------------------------------------------------------
+
+// returns the current window mode (FULLSCREEN/WINDOWED)
+inline int Window::GetMode() const
 {
 	return m_windowMode;
 }
 
-inline float Window::CenterX() const
+// returns the center of the window on the horizontal axis
+inline float Window::GetCenterX() const
 {
 	return m_windowCenterX;
 }
 
-inline float Window::CenterY() const
+// returns the center of the window on the vertical axis
+inline float Window::GetCenterY() const
 {
 	return m_windowCenterY;
 }
 
-inline std::string Window::Title() const
+// returns the window title
+inline std::string Window::GetTitle() const
 {
 	return m_windowTitle;
 }
 
-inline void Window::HideCursor(bool hide)
+// ---------------------------------------------------------------------------------
+// 
+// enables or disables cursor display
+inline void Window::ShowCursor(bool show)
 {
-	ShowCursor(!hide);
+	::ShowCursor(show);
 }
 
-inline void Window::Close() const
+// closes the window immediately
+inline void Window::CloseWindow() const
 {
 	PostMessage(m_windowHandle, WM_DESTROY, 0, 0);
 }
 
-inline bool Window::KeyDown(int vkcode) const
+// returns true if the key is pressed
+inline bool Window::IsKeyDown(int vkcode) const
 {
 	return m_windowKeys[vkcode];
 }
 
-inline bool Window::KeyUp(int vkcode) const
+// returns true if the key is released
+inline bool Window::IsKeyUp(int vkcode) const
 {
 	return !m_windowKeys[vkcode];
 }
 
-inline int Window::MouseX() const
+// returns the mouse position on the x-axis
+inline int Window::GetMouseX() const
 {
 	return m_windowMouseX;
 }
 
-inline int Window::MouseY() const
+// returns the mouse position on the y-axis
+inline int Window::GetMouseY() const
 {
 	return m_windowMouseY;
 }
 
-inline COLORREF Window::Color() const
+// ---------------------------------------------------------------------------------
+
+// returns the window background color
+inline COLORREF Window::GetBackgroundColor() const
 {
 	return m_windowColor;
 }
 
-inline void Window::Color(int r, int g, int b)
+// sets the window background color
+inline void Window::SetBackgroundColor(int r, int g, int b)
 {
 	m_windowColor = RGB(r, g, b);
 }

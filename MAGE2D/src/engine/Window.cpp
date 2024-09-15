@@ -22,7 +22,7 @@ Window::Window()
 	m_windowCenterY = m_windowHeight / 2.0f;
 }
 
-void Window::Mode(int mode)
+void Window::SetMode(int mode)
 {
 	m_windowMode = mode;
 
@@ -36,7 +36,7 @@ void Window::Mode(int mode)
 	}
 }
 
-void Window::Size(int width, int height)
+void Window::SetSize(int width, int height)
 {
 	m_windowWidth = width;
 	m_windowHeight = height;
@@ -52,25 +52,25 @@ void Window::Size(int width, int height)
 
 void Window::Print(const std::string& text, int x, int y, COLORREF color) const
 {
-	// Esta função exibe texto na posição (x, y) na tela usando a cor especificada
-	// Ela usa a biblioteca Windows (lenta) e deve ser usada apenas para depuração
+	// This function displays text at position (x, y) on the screen using the specified color
+	// It uses the Windows library (slow) and should be used only for debugging
 
-	// Obter o contexto do dispositivo
+	// Get the device context
 	HDC xdc = GetDC(m_windowHandle);
 
-	// Definir a cor do texto
+	// Set the text color
 	SetTextColor(xdc, color);
 
-	// Definir o fundo do texto como transparente
+	// Set the text background to transparent
 	SetBkMode(xdc, TRANSPARENT);
 
-	// Converter std::string para std::wstring
+	// Convert std::string to std::wstring
 	std::wstring wtext(text.begin(), text.end());
 
-	// Exibir o texto
+	// Display the text
 	TextOut(xdc, x, y, wtext.c_str(), static_cast<int>(wtext.size()));
 
-	// Liberar o contexto do dispositivo
+	// Release the device context
 	ReleaseDC(m_windowHandle, xdc);
 }
 
@@ -78,7 +78,7 @@ bool Window::Create()
 {
 	WNDCLASSEX wndClass{};
 
-	// Definir uma classe de janela chamada "GameWindow"
+	// Define a window class called "GameWindow"
 	wndClass.cbSize = sizeof(WNDCLASSEX);
 	wndClass.style = CS_DBLCLKS | CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
 	wndClass.lpfnWndProc = Window::WinProc;
@@ -92,52 +92,53 @@ bool Window::Create()
 	wndClass.lpszClassName = L"GameWindow";
 	wndClass.hIconSm = m_windowIcon;
 
-	// Registrar "GameWindow"
+	// Register "GameWindow"
 	if (!RegisterClassEx(&wndClass))
 		return false;
 
-	// Criar uma janela baseada na classe "GameWindow"
+	// Create a window based on the "GameWindow" class
 	m_windowHandle = CreateWindowEx(
-		0,                              // Estilos extras
-		L"GameWindow",                  // Nome da classe da janela
-		std::wstring(m_windowTitle.begin(), m_windowTitle.end()).c_str(), // Título da janela
-		m_windowStyle,                  // Estilo da janela
-		m_windowPosX, m_windowPosY,     // Posição inicial (x, y)
-		m_windowWidth, m_windowHeight,  // Largura e altura da janela
-		nullptr,                        // Handle da janela pai
-		nullptr,                        // Handle do menu
-		m_hInstance,                    // Handle da instância da aplicação
-		nullptr);                       // Parâmetros de criação
+		0,                              // Extra styles
+		L"GameWindow",                  // Window class name
+		std::wstring(m_windowTitle.begin(), m_windowTitle.end()).c_str(), // Window title
+		m_windowStyle,                  // Window style
+		m_windowPosX, m_windowPosY,     // Initial position (x, y)
+		m_windowWidth, m_windowHeight,  // Window width and height
+		nullptr,                        // Parent window handle
+		nullptr,                        // Menu handle
+		m_hInstance,                    // Application instance handle
+		nullptr);                       // Creation parameters
 
-	// No modo janela, considerar o espaço ocupado pelas bordas e barras de título
+	// In windowed mode, consider the space occupied by borders and title bars
 	if (m_windowMode == WINDOWED)
 	{
-		// Retângulo com o tamanho desejado da área do cliente
+		// Rectangle with the desired client area size
 		RECT winRect = { 0, 0, m_windowWidth, m_windowHeight };
 
-		// Ajustar o tamanho do retângulo
+		// Adjust the rectangle size
 		AdjustWindowRectEx(&winRect,
 			GetWindowStyle(m_windowHandle),
 			GetMenu(m_windowHandle) != nullptr,
 			GetWindowExStyle(m_windowHandle));
 
-		// Atualizar a posição da janela
+		// Update the window position
 		m_windowPosX = GetSystemMetrics(SM_CXSCREEN) / 2 - (winRect.right - winRect.left) / 2;
 		m_windowPosY = GetSystemMetrics(SM_CYSCREEN) / 2 - (winRect.bottom - winRect.top) / 2;
 
-		// Redimensionar a janela com uma chamada para MoveWindow
+		// Resize the window with a call to MoveWindow
 		MoveWindow(
-			m_windowHandle,                  // Handle da janela
-			m_windowPosX,                    // Posição x
-			m_windowPosY,                    // Posição y
-			winRect.right - winRect.left,    // Largura
-			winRect.bottom - winRect.top,    // Altura
+			m_windowHandle,                  // Window handle
+			m_windowPosX,                    // x position
+			m_windowPosY,                    // y position
+			winRect.right - winRect.left,    // Width
+			winRect.bottom - winRect.top,    // Height
 			TRUE);                           // Repaint
 	}
 
-	// Retornar o status da inicialização (bem-sucedida ou não)
+	// Return the initialization status (successful or not)
 	return (m_windowHandle != nullptr);
 }
+
 LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
