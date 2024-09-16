@@ -2,8 +2,8 @@
 #define _MAGE2D_WINDOW_H_
 
 #include <windows.h>    
-#include <string>       
 #include <windowsx.h>
+#include <string>       
 
 #include "Types.h"    
 
@@ -36,42 +36,40 @@ private:
 	static int  m_windowMouseY;											// Mouse position on the y-axis
 
 public:
-	Window();															// Window constructor
+	Window();																	// Window constructor
 
-	HINSTANCE GetAppId() const;											// Returns the application instance handle
-	HWND GetWindowId() const;											// Returns the window handle
-	int GetWidth() const;												// Returns the current window width
-	int GetHeight() const;												// Returns the current window height
+	HINSTANCE GetAppId() const;													// Returns the application instance handle
+	HWND GetWindowId() const;													// Returns the window handle
+	int GetWidth() const;														// Returns the current window width
+	int GetHeight() const;														// Returns the current window height
 
-	void SetIcon(const uint icon);										// Sets the window icon
-	void SetCursor(const uint cursor);									// Sets the window cursor
-	void SetTitle(const std::string& title);							// Sets the window title
-	void SetSize(int width, int height);								// Sets the window size (width and height)
-	void SetMode(int mode);												// Sets the window mode (full screen/windowed)
+	void SetIcon(const uint icon);												// Sets the window icon
+	void SetCursor(const uint cursor);											// Sets the window cursor
+	void SetTitle(const std::string& title);									// Sets the window title
+	void SetSize(int width, int height);										// Sets the window size (width and height)
+	void SetMode(int mode);														// Sets the window mode (full screen/windowed)
 
-	int GetMode() const;												// Returns the current window mode (full screen/windowed)
-	float GetCenterX() const;											// Returns the window center on the x-axis
-	float GetCenterY() const;											// Returns the window center on the y-axis
-	std::string GetTitle() const;										// Returns the window title
+	int GetMode() const;														// Returns the current window mode (full screen/windowed)
+	float GetCenterX() const;													// Returns the window center on the x-axis
+	float GetCenterY() const;													// Returns the window center on the y-axis
+	std::string GetTitle() const;												// Returns the window title
 
-	void ShowCursor(bool show);											// Enables or disables cursor display
-	void CloseWindow() const;											// Closes the window immediately
+	void ShowCursor(bool show);													// Enables or disables cursor display
+	void CloseWindow() const;													// Closes the window immediately
 
-	bool IsKeyDown(int vkcode) const;									// Checks if a key/button is pressed
-	bool IsKeyUp(int vkcode) const;										// Checks if a key/button is released
-	int GetMouseX() const;												// Returns the mouse position on the x-axis
-	int GetMouseY() const;												// Returns the mouse position on the y-axis
+	bool IsKeyDown(int vkcode) const;											// Checks if a key/button is pressed
+	bool IsKeyUp(int vkcode) const;												// Checks if a key/button is released
+	int GetMouseX() const;														// Returns the mouse position on the x-axis
+	int GetMouseY() const;														// Returns the mouse position on the y-axis
 
-	COLORREF GetBackgroundColor() const;								// Returns the window background color
-	void SetBackgroundColor(int r, int g, int b);						// Sets the window background color
-	void Print(const std::string& text, int x, int y, COLORREF color) const;// Displays text using the Windows library (slow)
-	bool Create();														// Creates the window with the attribute values
+	COLORREF GetBackgroundColor() const;										// Returns the window background color
+	void SetBackgroundColor(int r, int g, int b);								// Sets the window background color
+	void Print(const std::string& text, int x, int y, COLORREF color) const;	// Displays text using the Windows library (slow)
+	bool Create();																// Creates the window with the attribute values
 
 	// Windows event handling
 	static LRESULT CALLBACK WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 };
-
-// Inline member functions
 
 // Returns application id
 inline HINSTANCE Window::GetAppId() const

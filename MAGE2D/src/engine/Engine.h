@@ -3,6 +3,7 @@
 
 #include "Game.h"                       // game implementation
 #include "Window.h"                     // game window
+#include "Graphics.h"                   // graphics hardware
 
 class Engine
 {
@@ -12,9 +13,10 @@ private:
 public:
 	static Game* game;                  // game to be executed
 	static Window* window;              // game window
+	static Graphics* graphics;          // graphics device
 
-	Engine();                           // constructor
-	~Engine();                          // destructor
+	Engine();
+	~Engine();
 
 	int Start(Game* level);             // starts the game execution
 };

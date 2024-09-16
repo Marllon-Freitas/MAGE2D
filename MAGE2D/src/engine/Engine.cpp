@@ -3,17 +3,20 @@
 
 #include "Engine.h"
 
-Game* Engine::game = nullptr;       // game in execution
-Window* Engine::window = nullptr;   // game window
+Game* Engine::game = nullptr;           // game in execution
+Window* Engine::window = nullptr;       // game window
+Graphics* Engine::graphics = nullptr;   // graphics device
 
 Engine::Engine()
 {
 	window = new Window();
+	graphics = new Graphics();
 }
 
 Engine::~Engine()
 {
 	delete game;
+	delete graphics;
 	delete window;
 }
 
@@ -21,8 +24,18 @@ int Engine::Start(Game* level)
 {
 	game = level;
 
-	// create game window
-	window->Create();
+	if (!window->Create())
+	{
+		MessageBox(nullptr, L"Failed to create window", L"Engine", MB_OK);
+		return EXIT_FAILURE;
+	}
+
+	// initialize graphics device
+	if (!graphics->InitializeDirect3D(window))
+	{
+		MessageBox(window->GetWindowId(), L"Failed to initialize graphics device", L"Engine", MB_OK);
+		return EXIT_FAILURE;
+	}
 
 	// return the result of the game execution
 	return Loop();
@@ -30,23 +43,16 @@ int Engine::Start(Game* level)
 
 int Engine::Loop()
 {
-	MSG  msg = { 0 };   // Windows message
-	HDC  hdc;           // device context
-	RECT rect;          // client area of the screen
-
-	// capture device context
-	hdc = GetDC(window->GetWindowId());
-
-	// get the size of the client area
-	GetClientRect(window->GetWindowId(), &rect);
-
 	// game initialization
 	game->Init();
+
+	// Windows messages
+	MSG msg = { 0 };
 
 	// main game loop
 	do
 	{
-		// handle all events before updating the game
+		// check if there are Windows messages to process
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -57,13 +63,17 @@ int Engine::Loop()
 			// game update
 			game->Update();
 
-			// clear the client area
-			FillRect(hdc, &rect, CreateSolidBrush(window->GetBackgroundColor()));
+			// clear the screen for the next frame
+			graphics->ClearBackBuffer();
 
 			// draw the game
 			game->Draw();
 
-			Sleep(16);  // FPS control (quick fix)
+			// present the game on the screen (swap backbuffer/frontbuffer)
+			graphics->PresentFrame();
+
+			// FPS control (temporary solution)
+			Sleep(16);
 		}
 
 	} while (msg.message != WM_QUIT);
@@ -71,9 +81,6 @@ int Engine::Loop()
 	// game finalization
 	game->Finalize();
 
-	// release device context
-	ReleaseDC(window->GetWindowId(), hdc);
-
-	// end application
+	// exit application
 	return int(msg.wParam);
 }
