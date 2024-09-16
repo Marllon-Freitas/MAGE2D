@@ -1,6 +1,6 @@
-# Mage2D Game Engine 🚧
+# MAGE2D 🚧
 
-Mage2D is a simple 2D game engine built for educational purposes. It leverages Direct3D for rendering and provides a basic framework for creating 2D games.
+MAGE2D is a simple 2D game engine built for educational purposes. It leverages Direct3D for rendering and provides a basic framework for creating 2D games.
 
 ## Features
 
