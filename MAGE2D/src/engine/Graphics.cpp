@@ -6,44 +6,42 @@ D3D11_VIEWPORT Graphics::viewport = { 0 };					// viewport
 
 Graphics::Graphics()
 {
-	swapChain = nullptr;                    // pointer to swap chain 
-	renderTargetView = nullptr;             // render target view
-	blendState = nullptr;                   // color blending
-	featureLevel = D3D_FEATURE_LEVEL_11_0;  // Direct3D version
+	m_swapChain = nullptr;                    // pointer to swap chain 
+	m_renderTargetView = nullptr;             // render target view
+	m_blendState = nullptr;                   // color blending
+	m_featureLevel = D3D_FEATURE_LEVEL_11_0;  // Direct3D version
 
-	backgroundColor[0] = 0.0f;              // Red
-	backgroundColor[1] = 0.0f;              // Green
-	backgroundColor[2] = 0.0f;              // Blue
-	backgroundColor[3] = 0.0f;              // Alpha (0 = transparent)
+	m_backgroundColor[0] = 0.0f;              // Red
+	m_backgroundColor[1] = 0.0f;              // Green
+	m_backgroundColor[2] = 0.0f;              // Blue
+	m_backgroundColor[3] = 0.0f;              // Alpha (0 = transparent)
 
-	verticalSyncEnabled = false;            // vertical sync disabled
+	m_verticalSyncEnabled = false;            // vertical sync disabled
 }
-
-// ------------------------------------------------------------------------------
 
 Graphics::~Graphics()
 {
 	// release blend state
-	if (blendState)
+	if (m_blendState)
 	{
-		blendState->Release();
-		blendState = nullptr;
+		m_blendState->Release();
+		m_blendState = nullptr;
 	}
 
 	// release render target
-	if (renderTargetView)
+	if (m_renderTargetView)
 	{
-		renderTargetView->Release();
-		renderTargetView = nullptr;
+		m_renderTargetView->Release();
+		m_renderTargetView = nullptr;
 	}
 
 	// release swap chain
-	if (swapChain)
+	if (m_swapChain)
 	{
 		// Direct3D is unable to close when in full screen
-		swapChain->SetFullscreenState(false, NULL);
-		swapChain->Release();
-		swapChain = nullptr;
+		m_swapChain->SetFullscreenState(false, NULL);
+		m_swapChain->Release();
+		m_swapChain = nullptr;
 	}
 
 	// release graphics device context
@@ -62,8 +60,6 @@ Graphics::~Graphics()
 		device = nullptr;
 	}
 }
-
-// -----------------------------------------------------------------------------
 
 bool Graphics::InitializeDirect3D(Window* window)
 {
@@ -89,7 +85,7 @@ bool Graphics::InitializeDirect3D(Window* window)
 			0,                              // size of the feature levels array
 			D3D11_SDK_VERSION,              // Direct3D SDK version
 			&device,                        // stores the created D3D device
-			&featureLevel,                  // Direct3D version used
+			&m_featureLevel,                // Direct3D version used
 			&deviceContext))                // D3D device context
 	{
 		// system does not support D3D11 device
@@ -97,7 +93,7 @@ bool Graphics::InitializeDirect3D(Window* window)
 		// implements a software rasterizer
 		if FAILED(D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_WARP,
 			NULL, createDeviceFlags, NULL, 0, D3D11_SDK_VERSION,
-			&device, &featureLevel, &deviceContext))
+			&device, &m_featureLevel, &deviceContext))
 			return false;
 
 		OutputDebugString(L"---> Using WARP Adapter: no support for D3D11\n");
@@ -111,10 +107,10 @@ bool Graphics::InitializeDirect3D(Window* window)
 	// to the same background color as the window
 	COLORREF color = window->GetBackgroundColor();
 
-	backgroundColor[0] = GetRValue(color) / 255.0f;     // Red
-	backgroundColor[1] = GetGValue(color) / 255.0f;     // Green
-	backgroundColor[2] = GetBValue(color) / 255.0f;     // Blue
-	backgroundColor[3] = 1.0f;                          // Alpha (1 = solid color)
+	m_backgroundColor[0] = GetRValue(color) / 255.0f;     // Red
+	m_backgroundColor[1] = GetGValue(color) / 255.0f;     // Green
+	m_backgroundColor[2] = GetBValue(color) / 255.0f;     // Blue
+	m_backgroundColor[3] = 1.0f;                          // Alpha (1 = solid color)
 
 	// -------------------------------
 	// DXGI Interfaces
@@ -156,7 +152,7 @@ bool Graphics::InitializeDirect3D(Window* window)
 	swapDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;       // change monitor resolution in full screen
 
 	// create a swap chain
-	if FAILED(dxgiFactory->CreateSwapChain(device, &swapDesc, &swapChain))
+	if FAILED(dxgiFactory->CreateSwapChain(device, &swapDesc, &m_swapChain))
 		return false;
 
 	// prevent DXGI from monitoring ALT-ENTER and switching between windowed/fullscreen
@@ -169,15 +165,15 @@ bool Graphics::InitializeDirect3D(Window* window)
 
 	// get the backbuffer surface from a swap chain
 	ID3D11Texture2D* backBuffer = nullptr;
-	if FAILED(swapChain->GetBuffer(0, __uuidof(backBuffer), (void**)(&backBuffer)))
+	if FAILED(m_swapChain->GetBuffer(0, __uuidof(backBuffer), (void**)(&backBuffer)))
 		return false;
 
 	// create a render-target view of the backbuffer
-	if FAILED(device->CreateRenderTargetView(backBuffer, NULL, &renderTargetView))
+	if FAILED(device->CreateRenderTargetView(backBuffer, NULL, &m_renderTargetView))
 		return false;
 
 	// bind a render-target to the output-merger stage
-	deviceContext->OMSetRenderTargets(1, &renderTargetView, nullptr);
+	deviceContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 
 	// -------------------------------
 	// Viewport / Rasterizer
@@ -217,11 +213,11 @@ bool Graphics::InitializeDirect3D(Window* window)
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = 0x0F;                 // components of each pixel that can be overwritten
 
 	// create the blend state
-	if FAILED(device->CreateBlendState(&blendDesc, &blendState))
+	if FAILED(device->CreateBlendState(&blendDesc, &m_blendState))
 		return false;
 
 	// bind the blend state to the Output-Merger stage
-	deviceContext->OMSetBlendState(blendState, nullptr, 0xffffffff);
+	deviceContext->OMSetBlendState(m_blendState, nullptr, 0xffffffff);
 
 	// -------------------------------
 	// Release DXGI interfaces
@@ -235,5 +231,3 @@ bool Graphics::InitializeDirect3D(Window* window)
 	// successful initialization
 	return true;
 }
-
-// -----------------------------------------------------------------------------

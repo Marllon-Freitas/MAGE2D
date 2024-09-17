@@ -10,12 +10,12 @@
 class Graphics
 {
 private:
-	IDXGISwapChain* swapChain;                 // Swap chain             
-	ID3D11RenderTargetView* renderTargetView;  // Render target view of the backbuffer
-	ID3D11BlendState* blendState;              // Color blending configuration
-	D3D_FEATURE_LEVEL featureLevel;            // D3D feature level supported by the hardware
-	float backgroundColor[4];                  // Background color of the backbuffer
-	bool verticalSyncEnabled;                  // Vertical sync enabled/disabled
+	IDXGISwapChain* m_swapChain;                 // Swap chain             
+	ID3D11RenderTargetView* m_renderTargetView;  // Render target view of the backbuffer
+	ID3D11BlendState* m_blendState;              // Color blending configuration
+	D3D_FEATURE_LEVEL m_featureLevel;            // D3D feature level supported by the hardware
+	float m_backgroundColor[4];                  // Background color of the backbuffer
+	bool m_verticalSyncEnabled;                  // Vertical sync enabled/disabled
 
 public:
 	Graphics();
@@ -34,20 +34,20 @@ public:
 // Enable/disable vertical sync
 inline void Graphics::SetVerticalSync(bool enabled)
 {
-	verticalSyncEnabled = enabled;
+	m_verticalSyncEnabled = enabled;
 }
 
 // Clear the backbuffer for the next frame
 inline void Graphics::ClearBackBuffer()
 {
-	deviceContext->ClearRenderTargetView(renderTargetView, backgroundColor);
+	deviceContext->ClearRenderTargetView(m_renderTargetView, m_backgroundColor);
 }
 
 // Present the frame on the screen (swap backbuffer with frontbuffer)
 inline void Graphics::PresentFrame()
 {
-	swapChain->Present(verticalSyncEnabled, NULL);
-	deviceContext->OMSetRenderTargets(1, &renderTargetView, nullptr);
+	m_swapChain->Present(m_verticalSyncEnabled, NULL);
+	deviceContext->OMSetRenderTargets(1, &m_renderTargetView, nullptr);
 }
 
 #endif

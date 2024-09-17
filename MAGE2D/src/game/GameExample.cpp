@@ -5,7 +5,7 @@
 #include "../engine/Engine.h"
 #include "../engine/Game.h"
 
-class WinGame : public Game
+class TestGame : public Game
 {
 private:
 
@@ -16,28 +16,32 @@ public:
 	void Finalize();
 };
 
-void WinGame::Init()
+void TestGame::Init()
 {
 
 }
 
-void WinGame::Update()
+void TestGame::Update()
 {
-	if (window->IsKeyDown(VK_ESCAPE))
-		window->CloseWindow();
+	if (m_window->IsKeyDown(VK_ESCAPE))
+		m_window->CloseWindow();
 }
 
-void WinGame::Draw()
+void TestGame::Draw()
 {
 }
 
-void WinGame::Finalize()
+void TestGame::Finalize()
 {
 }
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
+
+	Timer timer;
+	timer.Start();
+
 	// create engine
 	Engine* engine = new Engine();
 
@@ -45,12 +49,20 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	engine->window->SetMode(WINDOWED);
 	engine->window->SetSize(960, 540);
 	engine->window->SetBackgroundColor(30, 30, 30);
-	engine->window->SetTitle("Window Game");
+	engine->window->SetTitle("Test Game");
 	engine->window->SetIcon(IDI_ICON);
 	engine->window->SetCursor(NULL);
 
+	float timePassed = timer.GetElapsedTime();
+	std::wstringstream textTimer;
+	textTimer << " -----> Time passed: " << timePassed;
+
+	OutputDebugString(textTimer.str().c_str());
+
+	engine->graphics->SetVerticalSync(true);
+
 	// create and start the game
-	int exit_code = engine->Start(new WinGame());
+	int exit_code = engine->Start(new TestGame());
 
 	delete engine;
 	return exit_code;
