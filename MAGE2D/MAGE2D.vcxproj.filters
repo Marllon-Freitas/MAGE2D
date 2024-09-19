@@ -89,4 +89,8 @@
       <Filter>Game\Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\engine\shaders\Vertex.hlsl" />
+    <FxCompile Include="src\engine\shaders\Pixel.hlsl" />
+  </ItemGroup>
 </Project>
