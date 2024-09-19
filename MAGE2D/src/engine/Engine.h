@@ -13,7 +13,7 @@ private:
 	static bool m_isPaused;             // game state
 
 	float CalculateFrameTime();         // calculates the frame time
-	int   Loop();                    // starts game execution
+	int   Loop();						// starts game execution
 
 public:
 	static Game* game;                  // game to be executed
