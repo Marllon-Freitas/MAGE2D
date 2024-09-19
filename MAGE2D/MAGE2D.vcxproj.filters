@@ -25,6 +25,9 @@
     <Filter Include="Game\Source Files">
       <UniqueIdentifier>{1e9dffa0-1f01-4118-94d7-3d96080e85b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Shader Files">
+      <UniqueIdentifier>{52252db1-dcfb-44bc-982d-83b8a118dc9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\Window.cpp">
@@ -43,6 +46,9 @@
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\Timer.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\Texture.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,6 +72,9 @@
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\Timer.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\Texture.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
