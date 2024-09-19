@@ -134,6 +134,7 @@
     <ClCompile Include="src\engine\Engine.cpp" />
     <ClCompile Include="src\engine\Game.cpp" />
     <ClCompile Include="src\engine\Graphics.cpp" />
+    <ClCompile Include="src\engine\Image.cpp" />
     <ClCompile Include="src\engine\Texture.cpp" />
     <ClCompile Include="src\engine\Timer.cpp" />
     <ClCompile Include="src\engine\Window.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="src\engine\Engine.h" />
     <ClInclude Include="src\engine\Game.h" />
     <ClInclude Include="src\engine\Graphics.h" />
+    <ClInclude Include="src\engine\Image.h" />
     <ClInclude Include="src\engine\Texture.h" />
     <ClInclude Include="src\engine\Timer.h" />
     <ClInclude Include="src\game\Resources.h" />

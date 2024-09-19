@@ -51,6 +51,9 @@
     <ClCompile Include="src\engine\Texture.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\Image.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\Window.h">
@@ -75,6 +78,9 @@
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\Texture.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\Image.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
