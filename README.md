@@ -11,6 +11,7 @@ MAGE2D is a simple 2D game engine built for educational purposes. It leverages D
 - **Timer**: High-resolution timer for precise time measurements and controlling the frame update rate (FPS).
 - **Texture Loading**: Load and create Direct3D 11 runtime textures from WIC images.
 - **Image Handling**: Load and manage images as textures in the game engine.
+- **Spriet Management**: Create and manipulate 2D sprites.
 
 ## Project Structure
 
@@ -21,6 +22,8 @@ MAGE2D is a simple 2D game engine built for educational purposes. It leverages D
 - **Timer.h / Timer.cpp**: Provides high-resolution timing functionalities and controls the frame update rate (FPS).
 - **Texture.h / Texture.cpp**: Functions for loading WIC images and creating Direct3D 11 runtime textures.
 - **Image.h / Image.cpp**: Manages image loading and provides access to texture views.
+- **Sprite.h / Sprite.cpp**: Represents 2D images that can be drawn on the screen.
+- **Renderer.h / Renderer.cpp**: Manages and renders sprites efficiently.
 - **Types.h**: Defines specific types used throughout the engine.
 
 ## License
