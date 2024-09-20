@@ -4,15 +4,18 @@
 #include "../engine/Image.h"
 #include "../engine/Sprite.h"
 
+// Game objects
+#include "../game/gameObejcts/Knight.h"
+
 class TestGame : public Game
 {
 private:
-	Sprite* backgroundSprite = nullptr;
-	Sprite* knightSprite = nullptr;
 	Image* logoImage = nullptr;
+	Sprite* backgroundSprite = nullptr;
 	Sprite* logoBehind = nullptr;
 	Sprite* logoFront = nullptr;
-	float x = 0, y = 0;
+
+	Knight* knight = nullptr;
 
 public:
 	void Init();
@@ -23,14 +26,12 @@ public:
 
 void TestGame::Init()
 {
-	backgroundSprite = new Sprite("resources/background.jpg");
-	knightSprite = new Sprite("resources/knight.png");
 	logoImage = new Image("resources/logo.png");
 	logoBehind = new Sprite(logoImage);
 	logoFront = new Sprite(logoImage);
+	backgroundSprite = new Sprite("resources/background.jpg");
 
-	x = 80.0f;
-	y = 90.0f;
+	knight = new Knight();
 }
 
 void TestGame::Update()
@@ -38,34 +39,30 @@ void TestGame::Update()
 	if (m_window->IsKeyDown(VK_ESCAPE))
 		m_window->CloseWindow();
 
-	if (m_window->IsKeyDown(VK_LEFT))
-		x -= 50.0f * m_gameTime;
-	if (m_window->IsKeyDown(VK_RIGHT))
-		x += 50.0f * m_gameTime;
-	if (m_window->IsKeyDown(VK_UP))
-		y -= 50.0f * m_gameTime;
-	if (m_window->IsKeyDown(VK_DOWN))
-		y += 50.0f * m_gameTime;
+	knight->Update();
 }
 
 void TestGame::Draw()
 {
 	backgroundSprite->Draw(0.0f, 0.0f, Layer::BACK);
-	knightSprite->Draw(x, y);
 	logoBehind->Draw(40.0f, 60.0f, Layer::UPPER);
 	logoFront->Draw(400.0f, 450.0f, Layer::LOWER);
+
+	knight->Draw();
 }
 
 void TestGame::Finalize()
 {
 	// remove sprites from memory
 	delete backgroundSprite;
-	delete knightSprite;
 	delete logoBehind;
 	delete logoFront;
 
 	// remove image from memory
 	delete logoImage;
+
+	// remove game objects from memory
+	delete knight;
 }
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,

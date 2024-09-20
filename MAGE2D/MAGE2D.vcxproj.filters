@@ -60,6 +60,12 @@
     <ClCompile Include="src\engine\Renderer.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\Object.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\gameObejcts\Knight.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\Window.h">
@@ -95,6 +101,12 @@
     <ClInclude Include="src\engine\Renderer.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\Object.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\gameObejcts\Knight.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\game\resource files\Resource.rc">
@@ -102,7 +114,11 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="src\engine\shaders\Vertex.hlsl" />
-    <FxCompile Include="src\engine\shaders\Pixel.hlsl" />
+    <FxCompile Include="src\engine\shaders\Pixel.hlsl">
+      <Filter>Engine\Shader Files</Filter>
+    </FxCompile>
+    <FxCompile Include="src\engine\shaders\Vertex.hlsl">
+      <Filter>Engine\Shader Files</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

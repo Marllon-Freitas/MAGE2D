@@ -1,10 +1,11 @@
 #ifndef _MAGE2D_RENDERER_H_
 #define _MAGE2D_RENDERER_H_
 
+#include <vector>
+
 #include "Window.h"
 #include "Graphics.h"
 #include "Sprite.h"
-#include <vector>
 
 class Renderer
 {
@@ -30,8 +31,8 @@ private:
 	void RenderBatch(ID3D11ShaderResourceView* texture, SpriteData** sprites, uint count);
 
 public:
-	Renderer();                                            // constructor
-	~Renderer();                                           // destructor
+	Renderer();
+	~Renderer();
 
 	bool Initialize(Window* window, Graphics* graphics);   // initializes the renderer
 	void Draw(SpriteData* sprite);                         // adds sprite to the list

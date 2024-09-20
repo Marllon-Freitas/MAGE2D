@@ -135,12 +135,14 @@
     <ClCompile Include="src\engine\Game.cpp" />
     <ClCompile Include="src\engine\Graphics.cpp" />
     <ClCompile Include="src\engine\Image.cpp" />
+    <ClCompile Include="src\engine\Object.cpp" />
     <ClCompile Include="src\engine\Sprite.cpp" />
     <ClCompile Include="src\engine\Texture.cpp" />
     <ClCompile Include="src\engine\Timer.cpp" />
     <ClCompile Include="src\engine\Window.cpp" />
     <ClCompile Include="src\game\GameExample.cpp" />
     <ClCompile Include="src\engine\Renderer.cpp" />
+    <ClCompile Include="src\game\gameObejcts\Knight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\Engine.h" />
@@ -151,9 +153,11 @@
     <ClInclude Include="src\engine\Sprite.h" />
     <ClInclude Include="src\engine\Texture.h" />
     <ClInclude Include="src\engine\Timer.h" />
+    <ClInclude Include="src\game\gameObejcts\Knight.h" />
     <ClInclude Include="src\game\Resources.h" />
     <ClInclude Include="src\engine\Types.h" />
     <ClInclude Include="src\engine\Window.h" />
+    <ClInclude Include="src\engine\Object.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\game\resource files\Resource.rc" />
