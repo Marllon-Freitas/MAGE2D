@@ -4,6 +4,7 @@
 #include "Game.h"                       // game implementation
 #include "Window.h"                     // game window
 #include "Graphics.h"                   // graphics hardware
+#include "Renderer.h"                   // sprite renderer
 #include "Timer.h"                      // time measurement
 
 class Engine
@@ -19,6 +20,7 @@ public:
 	static Game* game;                  // game to be executed
 	static Window* window;              // game window
 	static Graphics* graphics;          // graphics device
+	static Renderer* renderer;          // sprite renderer
 	static float frameTime;             // current frame time
 
 	Engine();

@@ -7,6 +7,7 @@
 Game* Engine::game = nullptr;           // game in execution
 Window* Engine::window = nullptr;       // game window
 Graphics* Engine::graphics = nullptr;   // graphics device
+Renderer* Engine::renderer = nullptr;   // sprite renderer
 float Engine::frameTime = 0.0f;         // current frame time
 bool Engine::m_isPaused = false;        // game loop state
 Timer Engine::m_timer;                  // time measurement
@@ -15,11 +16,13 @@ Engine::Engine()
 {
 	window = new Window();
 	graphics = new Graphics();
+	renderer = new Renderer();
 }
 
 Engine::~Engine()
 {
 	delete game;
+	delete renderer;
 	delete graphics;
 	delete window;
 }
@@ -38,6 +41,13 @@ int Engine::Start(Game* level)
 	if (!graphics->InitializeDirect3D(window))
 	{
 		MessageBox(window->GetWindowId(), L"Failed to initialize graphics device", L"Engine", MB_OK);
+		return EXIT_FAILURE;
+	}
+
+	// initialize sprite renderer
+	if (!renderer->Initialize(window, graphics))
+	{
+		MessageBox(window->GetWindowId(), L"Failed to create renderer", L"Engine", MB_OK);
 		return EXIT_FAILURE;
 	}
 
@@ -117,6 +127,9 @@ int Engine::Loop()
 
 				// draw the game
 				game->Draw();
+
+				// render sprites
+				renderer->Render();
 
 				// present the game on the screen (swap backbuffer/frontbuffer)
 				graphics->PresentFrame();

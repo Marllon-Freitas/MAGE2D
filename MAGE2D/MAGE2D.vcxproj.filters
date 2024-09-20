@@ -57,6 +57,9 @@
     <ClCompile Include="src\engine\Sprite.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\Renderer.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\Window.h">
@@ -87,6 +90,9 @@
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\Sprite.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\Renderer.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,7 +2,7 @@ Texture2D resource;
 
 SamplerState linearfilter
 {
-    Filter = MIN_MAG_MIP_LINEAR;
+    Filter = MIN_MAG_MIP_POINT;
 };
 
 SamplerState anisotropic
